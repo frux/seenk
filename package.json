@@ -1,0 +1,28 @@
+{
+  "name": "seenk",
+  "version": "0.0.1",
+  "description": "Flow controller powered by generators",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frux/seenk.git"
+  },
+  "keywords": [
+    "generators",
+    "seenk",
+    "async",
+    "flow"
+  ],
+  "author": "Vladimir Kudinov <qdinov@yandex.ru>",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/frux/seenk/issues"
+  },
+  "homepage": "https://github.com/frux/seenk#readme"
+}
