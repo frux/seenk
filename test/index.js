@@ -10,44 +10,56 @@ function blaBlaBla(text, delay){
     });
 }
 
-function startProfiling(){
-    var startTime = +new Date();
+describe('General tests', function(){
 
-    return function(){
-        return +new Date() - startTime;
-    };
-}
+    it('Generator function', function(done){
+        //Seenk generator test
+        Seenk(function*(){
+            var greeting = '';
 
-var stopMapProfiling = startProfiling();
-Seenk([
-    blaBlaBla('This', 203),
-    blaBlaBla('test', 340),
-    blaBlaBla('has', 3000),
-    blaBlaBla('been', 1003),
-    blaBlaBla('passed', 214),
-    blaBlaBla('successfully', 386)
-])
-    .then(function(msg){
-        console.log({
-            result: msg.join(' '),
-            time: stopMapProfiling()
-        });
-    });
-
-Seenk(function*(){
-    var greeting = '',
-        stopProfiling = startProfiling();
-
-    greeting += (yield blaBlaBla('Hello', 504)) +
-                (yield blaBlaBla(' ',     496)) +
-                (yield blaBlaBla('World', 1000)) +
+            greeting += (yield blaBlaBla('Hello', 100)) +
+                (yield blaBlaBla(' ',300)) +
+                (yield blaBlaBla('World', 300)) +
                 (yield blaBlaBla('!'));
 
-    return {
-        result: greeting,
-        time: stopProfiling()
-    };
-})
-    .then(function(greeting){
-        console.log(greeting);
+            return greeting;
+        })
+            .then(function(result){
+                (result === 'Hello World!') && done();
+            });
     });
+
+
+    it('Generator wrapping', function(done){
+        //Seenk.wrap test
+        (Seenk.wrap(function*(){
+            var message = '';
+
+            message += (yield blaBlaBla('Wrap', 100)) +
+                (yield blaBlaBla(' ', 200)) +
+                (yield blaBlaBla('me', 300)) +
+                (yield blaBlaBla('!'));
+
+            return message;
+        }))()
+            .then(function(result){
+                (result === 'Wrap me!') && done();
+            });
+    });
+
+
+    it('Array of promises', function(done){
+        //Seenk array
+        Seenk([
+            blaBlaBla('This', 100),
+            blaBlaBla('test', 200),
+            blaBlaBla('has', 300),
+            blaBlaBla('been', 400),
+            blaBlaBla('passed', 500),
+            blaBlaBla('successfully', 600)
+        ])
+            .then(function(result){
+                (result.join(' ') === 'This test has been passed successfully') && done();
+            });
+    });
+});

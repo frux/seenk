@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node test"
+    "test": "node_modules/mocha/bin/mocha test"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,9 @@
   ],
   "author": "Vladimir Kudinov <qdinov@yandex.ru>",
   "license": "WTFPL",
+  "devDependencies": {
+    "mocha": "^2.3.2"
+  },
   "bugs": {
     "url": "https://github.com/frux/seenk/issues"
   },
