@@ -1,7 +1,7 @@
 /**
  * Seenk.js
  * Flow controller powered by generators
- * @version 0.0.1
+ * @version 0.1.0
  */
 
 //save original .next() method

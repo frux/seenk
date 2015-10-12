@@ -18,7 +18,7 @@ describe('General tests', function(){
             var greeting = '';
 
             greeting += (yield blaBlaBla('Hello', 100)) +
-                (yield blaBlaBla(' ',300)) +
+                (yield blaBlaBla(' ', 300)) +
                 (yield blaBlaBla('World', 300)) +
                 (yield blaBlaBla('!'));
 
