@@ -8,10 +8,10 @@
 var _originalNext = (function*(){})().constructor.prototype.next,
 
     //construct new .next() method
-    _newNext = function(yieldData){
+    _next = function(iterable, yieldData){
 
         //call original method
-        var yieldResult = _originalNext.call(this, yieldData),
+        var yieldResult = _originalNext.call(iterable, yieldData),
             yieldValue;
 
         //if generator is done
@@ -44,19 +44,6 @@ var _originalNext = (function*(){})().constructor.prototype.next,
     };
 
 /**
- * Patch to apply to generator. Patch .next() method.
- * @returns {Generator}
- * @private
- */
-function _patch(){
-
-    //replace original method by patched one
-    this.next = _newNext.bind(this);
-
-    return this;
-}
-
-/**
  * Iterates yields
  * @param iterable {Generator} Generstor object
  * @param yieldValue {*} Value of previous yield
@@ -75,7 +62,7 @@ function _yieldIterator(iterable, yieldValue){
             yieldValue.then(function(nextYieldValue){
 
                 //run new iteration
-                resolve(_yieldIterator(iterable, iterable.next(nextYieldValue).value));
+                resolve(_yieldIterator(iterable, _next(iterable, nextYieldValue).value));
             });
 
             //if yield returns not a promise
@@ -96,7 +83,7 @@ function _yieldIterator(iterable, yieldValue){
 function _synchronize(generator){
 
     //patch generator
-    var iterable = _patch.apply(generator());
+    var iterable = generator();
 
     //run iterator
     return _yieldIterator(iterable, iterable.next().value);
