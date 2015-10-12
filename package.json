@@ -1,6 +1,6 @@
 {
   "name": "seenk",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Flow controller powered by generators",
   "main": "index.js",
   "directories": {
