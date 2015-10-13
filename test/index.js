@@ -13,7 +13,6 @@ function blaBlaBla(text, delay){
 describe('General tests', function(){
 
     it('Generator function', function(done){
-        //Seenk generator test
         Seenk(function*(){
             var greeting = '';
 
@@ -29,9 +28,17 @@ describe('General tests', function(){
             });
     });
 
+    it('Generator function with sync yield', function(done){
+        Seenk(function*(){
+            yield 5;
+            return yield true;
+        }).then(function(result){
+            result && done();
+        });
+    });
+
 
     it('Generator wrapping', function(done){
-        //Seenk.wrap test
         (Seenk.wrap(function*(){
             var message = '';
 
@@ -49,7 +56,6 @@ describe('General tests', function(){
 
 
     it('Array of promises', function(done){
-        //Seenk array
         Seenk([
             blaBlaBla('This', 100),
             blaBlaBla('test', 200),

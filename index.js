@@ -12,7 +12,11 @@
  * @private
  */
 function _yieldIterator(iterator, resolve, prevResult){
-    var yieldResult = iterator.next(prevResult);
+    var yieldResult;
+
+    prevResult = prevResult || {};
+
+    yieldResult = iterator.next(prevResult.value);
 
     if(yieldResult.done){
         resolve(yieldResult.value);
@@ -21,10 +25,10 @@ function _yieldIterator(iterator, resolve, prevResult){
 
     if(yieldResult.value instanceof Promise){
             yieldResult.value.then(function(nextResult){
-                _yieldIterator(iterator, resolve, nextResult);
+                _yieldIterator(iterator, resolve, { value: nextResult, done: false });
             });
     }else{
-        _yieldIterator(iterator, resolve, nextResult);
+        _yieldIterator(iterator, resolve, yieldResult);
     }
 }
 
@@ -41,7 +45,7 @@ function _synchronize(generator){
 
     //run iterator and return promise
     return new Promise(function(resolve, reject){
-        _yieldIterator(iterable, resolve);
+        _yieldIterator(iterable, resolve, {});
     });
 }
 
