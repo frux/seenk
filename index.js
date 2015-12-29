@@ -8,10 +8,11 @@
  *
  * @param iterator {Generator} Generator
  * @param resolve {function} Function resolves promise
+ * @param reject {function} Function rejects promise
  * @param prevResult {*} Result of previous iteration
  * @private
  */
-function _yieldIterator(iterator, resolve, prevResult){
+function _yieldIterator(iterator, resolve, reject, prevResult){
     var yieldResult;
 
     prevResult = prevResult || {};
@@ -24,11 +25,23 @@ function _yieldIterator(iterator, resolve, prevResult){
     }
 
     if(yieldResult.value instanceof Promise){
-            yieldResult.value.then(function(nextResult){
-                _yieldIterator(iterator, resolve, { value: nextResult, done: false });
-            });
+        return yieldResult.value
+            .then(function(nextResult){
+                _yieldIterator(iterator, resolve, reject, {value: nextResult, done: false});
+            })
+            .catch(function(err){
+                return reject(err);
+            })
+    }else if(yieldResult.value instanceof Array){
+        return Promise.all(yieldResult.value)
+            .then(function(nextResult){
+                _yieldIterator(iterator, resolve, reject, {value: nextResult, done: false});
+            })
+            .catch(function(err){
+                return reject(err);
+            })
     }else{
-        _yieldIterator(iterator, resolve, yieldResult);
+        return _yieldIterator(iterator, resolve, reject, yieldResult);
     }
 }
 
@@ -45,7 +58,7 @@ function _synchronize(generator){
 
     //run iterator and return promise
     return new Promise(function(resolve, reject){
-        _yieldIterator(iterable, resolve, {});
+        _yieldIterator(iterable, resolve, reject, {});
     });
 }
 
@@ -55,20 +68,10 @@ function _synchronize(generator){
  * @returns {Array}
  */
 function _map(asyncStack){
-    var results = [];
 
     //synchronously run all functions in asyncStack using generator
-    return _synchronize(function*(){
-
-        //if stack is not empty
-        while(asyncStack.length){
-
-            //push result of function in array
-            results.push(yield asyncStack.shift());
-        }
-
-        //return array of results
-        return results;
+    return seenk(function*(){
+        return yield asyncStack;
     });
 }
 

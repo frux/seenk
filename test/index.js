@@ -22,8 +22,7 @@ describe('General tests', function(){
                 (yield blaBlaBla('!'));
 
             return greeting;
-        })
-            .then(function(result){
+        }).then(function(result){
                 (result === 'Hello World!') && done();
             });
     });
@@ -48,8 +47,7 @@ describe('General tests', function(){
                 (yield blaBlaBla('!'));
 
             return message;
-        }))()
-            .then(function(result){
+        }))().then(function(result){
                 (result === 'Wrap me!') && done();
             });
     });
@@ -63,8 +61,7 @@ describe('General tests', function(){
             blaBlaBla('been', 400),
             blaBlaBla('passed', 500),
             blaBlaBla('successfully', 600)
-        ])
-            .then(function(result){
+        ]).then(function(result){
                 (result.join(' ') === 'This test has been passed successfully') && done();
             });
     });
